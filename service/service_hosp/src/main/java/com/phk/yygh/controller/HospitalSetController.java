@@ -1,5 +1,6 @@
 package com.phk.yygh.controller;
 
+import com.phk.yygh.common.result.Result;
 import com.phk.yygh.model.hosp.HospitalSet;
 import com.phk.yygh.service.HospitalSetService;
 import io.swagger.annotations.Api;
@@ -26,8 +27,8 @@ public class HospitalSetController {
 
     @ApiOperation("获取医院设置列表")
     @GetMapping("/findAll")
-    public List<HospitalSet> findAllHostpitalSet() {
+    public Result findAllHostpitalSet() {
         List<HospitalSet> list = hospitalSetService.list();
-        return list;
+        return Result.ok(list);
     }
 }
