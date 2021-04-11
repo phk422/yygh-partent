@@ -1,14 +1,17 @@
 package com.phk.yygh.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.phk.yygh.common.result.Result;
 import com.phk.yygh.model.hosp.HospitalSet;
 import com.phk.yygh.service.HospitalSetService;
+import com.phk.yygh.vo.hosp.HospitalSetQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +33,31 @@ public class HospitalSetController {
     public Result findAllHostpitalSet() {
         List<HospitalSet> list = hospitalSetService.list();
         return Result.ok(list);
+    }
+
+
+    // 分页查询医院设置列表
+    @ApiOperation("分页查询医院设置列表")
+    @PostMapping("/findPageHostSet/{currentPage}/{size}")
+    public Result findPageHostSet(@PathVariable @ApiParam("当前页码") long currentPage,
+                                  @PathVariable @ApiParam("当前页显示条数") long size,
+                                  @RequestBody(required = false) @ApiParam("查询条件") HospitalSetQueryVo hospitalSetQueryVo) {
+
+        System.out.println(currentPage);
+        // 分页查询
+        Page<HospitalSet> page = new Page<>(currentPage, size);
+        // 获取分页查询条件
+        String hosname = hospitalSetQueryVo.getHosname();
+        String hoscode = hospitalSetQueryVo.getHoscode();
+        QueryWrapper<HospitalSet> wrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(hoscode)) {
+            wrapper.eq("hoscode", hoscode);
+        }
+        if (!StringUtils.isEmpty(hosname)) {
+            wrapper.like("hosname", hosname);
+        }
+        Page<HospitalSet> hospitalSetPage = hospitalSetService.page(page, wrapper);
+        return Result.ok(hospitalSetPage);
+
     }
 }
