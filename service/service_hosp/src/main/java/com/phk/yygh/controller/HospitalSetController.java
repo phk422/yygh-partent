@@ -2,6 +2,7 @@ package com.phk.yygh.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.phk.yygh.common.exception.YyghException;
 import com.phk.yygh.common.result.Result;
 import com.phk.yygh.model.hosp.HospitalSet;
 import com.phk.yygh.service.HospitalSetService;
@@ -31,6 +32,11 @@ public class HospitalSetController {
     @ApiOperation("获取医院设置列表")
     @GetMapping("/findAll")
     public Result findAllHostpitalSet() {
+        try {
+            int a = 1/0;
+        } catch (Exception e) {
+            throw new YyghException("算式错误", 201);
+        }
         List<HospitalSet> list = hospitalSetService.list();
         return Result.ok(list);
     }
